@@ -8,45 +8,59 @@ const doList = document.getElementById('doList');
 const list = [];
 
 //追加
-const addTask = function () {
-    const input = document.getElementById('input').value;
-    list.push(input);
+const addTask = () => {
+    const inputValue = document.getElementById('input').value;
+    list.push(inputValue);
+}
 
-    list.forEach((t, i) => {
+//ボタン生成
+const makeWorkBtn = () => {//状態　作業中
+    const tr = document.createElement('tr');
+    const tdStatusWork = document.createElement('td');
+    const workBtn = document.createElement('button');
+    const workContent = document.createTextNode('作業中')
+    workBtn.appendChild(workContent);
+    workBtn.setAttribute('id', 'work');
+    tdStatusWork.appendChild(workBtn);
+    return tr.appendChild(tdStatusWork);
+}
+
+const makeDelBtn = () => {//状態　消去
+    const tr = document.createElement('tr');
+    const tdStatusDel = document.createElement('td');
+    const deleteBtn = document.createElement('button');
+    const deleteContent = document.createTextNode('消去');
+    deleteBtn.setAttribute('id', 'delete');
+    deleteBtn.appendChild(deleteContent);
+    tdStatusDel.appendChild(deleteBtn);
+    return tr.appendChild(tdStatusDel);
+}
+
+//ToDoリスト作成
+const makeList = () => {
+    addTask();
+    list.forEach((task, index) => {
         const tr = document.createElement('tr');
+        //<th>ID
+        const tdId = document.createElement('td');
+        tdId.textContent = index;//ID
+        //<th>コメント
+        const tdComment = document.createElement('td');
+        tdComment.textContent = task;//コメント
 
-        const tdId = document.createElement('td');//<th>ID
-        const tdComment = document.createElement('td');//<th>コメント
-        const tdStatus = document.createElement('td');//<th>状態 作業中
-        const tdStatus2 = document.createElement('td');//<th> 状態　消去
-
-        //状態　作業中
-        const workBtn = document.createElement('button');
-        const workContent = document.createTextNode('作業中')
-        workBtn.appendChild(workContent);
-        workBtn.setAttribute('id', 'work');
-        tdStatus.appendChild(workBtn);
-
-        //状態　消去
-        const deleteBtn = document.createElement('button');
-        const deleteContent = document.createTextNode('消去');
-        deleteBtn.setAttribute('id', 'delete');
-        deleteBtn.appendChild(deleteContent);
-        tdStatus2.appendChild(deleteBtn);
-
-        tdId.textContent = i;//ID
-        tdComment.textContent = t;//コメント
         tr.appendChild(tdId);
         tr.appendChild(tdComment);
-        tr.appendChild(tdStatus);
-        tr.appendChild(tdStatus2);
-
+        tr.appendChild(makeWorkBtn());
+        tr.appendChild(makeDelBtn());
         doList.appendChild(tr);
     });
 }
-
-addBtn.addEventListener('click', () => {
+//todo表示
+const toDoShow = () => {
     doList.innerText = '';
-    addTask();
-});
+    makeList();
+    document.getElementById('input').value = ''; //入力後、前の入力内容を消す
+}
 
+//実行
+addBtn.addEventListener('click', toDoShow);
